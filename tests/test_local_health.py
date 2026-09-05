@@ -3,24 +3,29 @@ from __future__ import annotations
 import stat
 import tempfile
 import unittest
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 import json
 from pathlib import Path
 
-from mundsen.config import ConfigurationError, RuntimeSettings
-from mundsen.cli import build_parser
-from mundsen.instance import InstanceSettings
-from mundsen.module_system import ModuleManager, parse_enabled_modules
-from mundsen.modules.local_health import LocalHealthError, LocalHealthModule
-from mundsen.paths import MundsenPaths
+from mundsen_agent.config import ConfigurationError, RuntimeSettings
+from mundsen_agent.cli import build_parser
+from mundsen_agent.instance import InstanceSettings
+from mundsen_agent.module_system import ModuleManager, parse_enabled_modules
+from mundsen_agent.modules.local_health import LocalHealthError, LocalHealthModule
+from mundsen_agent.paths import MundsenAgentPaths
 
 
-APPLE_HEALTH = """<?xml version="1.0" encoding="UTF-8"?>
+# The fixture data must stay inside the "last 14 days" window relative to
+# whenever the test suite actually runs, so it is anchored to today instead
+# of a hardcoded calendar date that eventually rots.
+_RECENT_DAY = (datetime.now(timezone.utc) - timedelta(days=2)).strftime("%Y-%m-%d")
+
+APPLE_HEALTH = f"""<?xml version="1.0" encoding="UTF-8"?>
 <HealthData>
- <Record type="HKQuantityTypeIdentifierHeartRateVariabilitySDNN" value="48.5" unit="ms" startDate="2026-08-16 07:00:00 +0200" endDate="2026-08-16 07:00:00 +0200"/>
- <Record type="HKQuantityTypeIdentifierStepCount" value="8342" unit="count" startDate="2026-08-16 00:00:00 +0200" endDate="2026-08-16 23:59:59 +0200"/>
- <Record type="IgnoredType" value="123" unit="count" startDate="2026-08-16 00:00:00 +0200" endDate="2026-08-16 01:00:00 +0200"/>
- <Workout workoutActivityType="HKWorkoutActivityTypeRunning" duration="42" durationUnit="min" totalDistance="8.1" totalDistanceUnit="km" totalEnergyBurned="510" totalEnergyBurnedUnit="kcal" startDate="2026-08-16 18:00:00 +0200" endDate="2026-08-16 18:42:00 +0200"/>
+ <Record type="HKQuantityTypeIdentifierHeartRateVariabilitySDNN" value="48.5" unit="ms" startDate="{_RECENT_DAY} 07:00:00 +0000" endDate="{_RECENT_DAY} 07:00:00 +0000"/>
+ <Record type="HKQuantityTypeIdentifierStepCount" value="8342" unit="count" startDate="{_RECENT_DAY} 00:00:00 +0000" endDate="{_RECENT_DAY} 23:59:59 +0000"/>
+ <Record type="IgnoredType" value="123" unit="count" startDate="{_RECENT_DAY} 00:00:00 +0000" endDate="{_RECENT_DAY} 01:00:00 +0000"/>
+ <Workout workoutActivityType="HKWorkoutActivityTypeRunning" duration="42" durationUnit="min" totalDistance="8.1" totalDistanceUnit="km" totalEnergyBurned="510" totalEnergyBurnedUnit="kcal" startDate="{_RECENT_DAY} 18:00:00 +0000" endDate="{_RECENT_DAY} 18:42:00 +0000"/>
 </HealthData>
 """
 
@@ -34,7 +39,7 @@ class TestLocalHealth(unittest.TestCase):
         self.tempdir = tempfile.TemporaryDirectory()
         self.addCleanup(self.tempdir.cleanup)
         self.root = Path(self.tempdir.name)
-        self.paths = MundsenPaths.from_root(self.root / "Mundsen")
+        self.paths = MundsenAgentPaths.from_root(self.root / "Mundsen Agent")
         self.module = LocalHealthModule(self.paths, settings())
         self.export = self.root / "export.xml"
         self.export.write_text(APPLE_HEALTH, encoding="utf-8")
@@ -92,7 +97,7 @@ class TestModuleManager(unittest.TestCase):
     def setUp(self) -> None:
         self.tempdir = tempfile.TemporaryDirectory()
         self.addCleanup(self.tempdir.cleanup)
-        self.paths = MundsenPaths.from_root(Path(self.tempdir.name) / "Mundsen")
+        self.paths = MundsenAgentPaths.from_root(Path(self.tempdir.name) / "Mundsen Agent")
 
     def test_disabled_by_default_and_explicit_enable(self) -> None:
         disabled = ModuleManager(self.paths, RuntimeSettings({}), settings())

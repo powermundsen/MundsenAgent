@@ -20,7 +20,7 @@ jobs:
           python-version: "3.12"
       - name: Validate tag
         run: |
-          package_version="$(python -c 'import sys; sys.path.insert(0, "src"); import mundsen; print(mundsen.__version__)')"
+          package_version="$(python -c 'import sys; sys.path.insert(0, "src"); import mundsen_agent; print(mundsen_agent.__version__)')"
           test "${GITHUB_REF_NAME}" = "v${package_version}"
       - name: Require immutable-release gate
         env:
@@ -52,6 +52,6 @@ jobs:
           case "${GITHUB_REF_NAME}" in *-*) prerelease=(--prerelease) ;; esac
           gh release create "${GITHUB_REF_NAME}" dist/* \
             --draft --verify-tag --generate-notes \
-            --title "Mundsen ${GITHUB_REF_NAME#v}" \
+            --title "Mundsen Agent ${GITHUB_REF_NAME#v}" \
             "${prerelease[@]}"
           gh release edit "${GITHUB_REF_NAME}" --draft=false

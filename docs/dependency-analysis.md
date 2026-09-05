@@ -6,7 +6,7 @@ Dette dokumentet kartlegger de vurderte kildefilene fra en eksisterende privat
 assistent uten å importere kildehistorikk eller persondata. Analysen bestemmer
 hva som kan gjenbrukes, hva som må skrives om og hva som skal utelates.
 
-Ingen hel kildefil eller kildehistorikk er kopiert til Mundsen. Den godkjente
+Ingen hel kildefil eller kildehistorikk er kopiert til Mundsen Agent. Den godkjente
 elleve-filers grunnpakken er nå implementert som ny, sanitert kode etter
 kontraktene i dette dokumentet.
 
@@ -160,7 +160,7 @@ tilbake til en leverandørspesifikk settingsfil i hjemmekatalogen.
 
 **Må skrives om:**
 
-- Mundsen skal lese egne config- og secretsfiler
+- Mundsen Agent skal lese egne config- og secretsfiler
 - stier skal injiseres og kunne peke til et midlertidig testmiljø
 - ingen agentleverandørs settingsfil skal brukes som generell secretskilde
 - validering skal returnere strukturerte feil, ikke mutere miljøet ved import
@@ -323,7 +323,7 @@ Hvert trinn får egne tester og personvernport før neste trinn.
 ## Godkjenningsport
 
 Prosjekteieren godkjente 2026-07-28 både den avgrensede elleve-filers
-kodecommitten og kontrollert omskriving av den korte Mundsen-historikken.
+kodecommitten og kontrollert omskriving av den korte Mundsen Agent-historikken.
 Begge handlingene er gjennomført og pushet.
 
 Godkjenningen omfattet bare de elleve kode- og testfilene over. Router,

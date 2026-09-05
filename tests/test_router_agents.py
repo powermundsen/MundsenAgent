@@ -6,13 +6,13 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from mundsen.paths import MundsenPaths
-from mundsen.router.agents import (
+from mundsen_agent.paths import MundsenAgentPaths
+from mundsen_agent.router.agents import (
     ClaudeAdapter,
     CodexAdapter,
     provider_environment,
 )
-from mundsen.router.process import CommandResult
+from mundsen_agent.router.process import CommandResult
 
 
 class FakeRunner:
@@ -29,7 +29,7 @@ class TestAgentAdapters(unittest.TestCase):
     def setUp(self) -> None:
         self.tempdir = tempfile.TemporaryDirectory()
         self.addCleanup(self.tempdir.cleanup)
-        self.paths = MundsenPaths.from_root(Path(self.tempdir.name) / "Mundsen")
+        self.paths = MundsenAgentPaths.from_root(Path(self.tempdir.name) / "Mundsen Agent")
         self.paths.instance_dir.mkdir(parents=True)
 
     def test_provider_environment_removes_api_billing_variables(self) -> None:

@@ -12,7 +12,7 @@ esac
 
 package_version="$(
     sed -n 's/^__version__ = "\([^"]*\)"/\1/p' \
-        "$repo_root/src/mundsen/__init__.py"
+        "$repo_root/src/mundsen_agent/__init__.py"
 )"
 [ "$package_version" = "$version" ] || {
     printf 'Requested version does not match package version %s\n' \
@@ -21,13 +21,13 @@ package_version="$(
 }
 
 mkdir -p "$output_dir"
-temporary_dir="$(mktemp -d "${TMPDIR:-/tmp}/mundsen-release.XXXXXX")"
+temporary_dir="$(mktemp -d "${TMPDIR:-/tmp}/mundsen-agent-release.XXXXXX")"
 cleanup() {
     rm -rf "$temporary_dir"
 }
 trap cleanup EXIT INT TERM
 
-stage="$temporary_dir/mundsen-$version"
+stage="$temporary_dir/mundsen-agent-$version"
 mkdir -p "$stage"
 (
     cd "$repo_root"
@@ -48,9 +48,9 @@ mkdir -p "$stage"
         docs
 ) | tar -xf - -C "$stage"
 
-archive_name="mundsen-$version.tar.gz"
+archive_name="mundsen-agent-$version.tar.gz"
 archive="$output_dir/$archive_name"
-tar -czf "$archive" -C "$temporary_dir" "mundsen-$version"
+tar -czf "$archive" -C "$temporary_dir" "mundsen-agent-$version"
 
 if command -v shasum >/dev/null 2>&1; then
     checksum="$(shasum -a 256 "$archive" | awk '{print $1}')"
@@ -78,7 +78,7 @@ printf '%s\n' \
     '}' \
     > "$manifest"
 
-bundle="$output_dir/Mundsen-$version-installer.sh"
+bundle="$output_dir/MundsenAgent-$version-installer.sh"
 cp "$repo_root/installer/install.sh" "$bundle"
 cat "$archive" >> "$bundle"
 chmod 700 "$bundle"

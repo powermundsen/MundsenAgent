@@ -7,15 +7,15 @@ from datetime import datetime
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
-from mundsen.context import ContextError, build_instance_context
-from mundsen.paths import MundsenPaths
+from mundsen_agent.context import ContextError, build_instance_context
+from mundsen_agent.paths import MundsenAgentPaths
 
 
 class TestInstanceContext(unittest.TestCase):
     def setUp(self) -> None:
         self.tempdir = tempfile.TemporaryDirectory()
         self.addCleanup(self.tempdir.cleanup)
-        self.paths = MundsenPaths.from_root(Path(self.tempdir.name) / "Mundsen")
+        self.paths = MundsenAgentPaths.from_root(Path(self.tempdir.name) / "Mundsen Agent")
         (self.paths.instance_dir / "memory").mkdir(parents=True)
 
     def test_loads_profile_threads_reminders_and_today(self) -> None:

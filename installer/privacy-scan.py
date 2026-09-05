@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Conservative current-tree privacy and secret gate for Mundsen."""
+"""Conservative current-tree privacy and secret gate for Mundsen Agent."""
 
 from __future__ import annotations
 

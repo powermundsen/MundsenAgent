@@ -6,14 +6,14 @@ betalbar API. Modulen er av som standard.
 ## Dataflyt
 
 1. Brukeren eksporterer Apple Health-data fra Helse-appen på iPhone.
-2. `export.zip` pakkes ut lokalt, og `export.xml` gis eksplisitt til Mundsen.
-3. Mundsen streamer utvalgte workouts og numeriske målinger til privat SQLite.
+2. `export.zip` pakkes ut lokalt, og `export.xml` gis eksplisitt til Mundsen Agent.
+3. Mundsen Agent streamer utvalgte workouts og numeriske målinger til privat SQLite.
 4. Modulen skriver `training-summary.md` og `training-summary.json` med modus
    `0600` under modulens private statekatalog.
 5. Bare Markdown-sammendraget legges i agentkonteksten. Rå XML, SQLite og
    import-ID sendes ikke til Claude eller OpenAI.
 
-Eksportfilen endres eller slettes aldri av Mundsen. Importen dedupliserer både
+Eksportfilen endres eller slettes aldri av Mundsen Agent. Importen dedupliserer både
 hele eksportfiler og individuelle events.
 
 ## Aktivering
@@ -27,8 +27,8 @@ MUNDSEN_MODULES=local-health
 Restart deretter tjenesten og kontroller status:
 
 ```sh
-mundsen service restart
-mundsen training status
+mundsen-agent service restart
+mundsen-agent training status
 ```
 
 Aktivering er et eksplisitt samtykke til at det genererte sammendraget kan
@@ -39,9 +39,9 @@ slettes ikke automatisk.
 ## Import og sammendrag
 
 ```sh
-mundsen training import /absolutt/sti/til/export.xml
-mundsen training summarize
-mundsen training status
+mundsen-agent training import /absolutt/sti/til/export.xml
+mundsen-agent training summarize
+mundsen-agent training status
 ```
 
 Import krever en absolutt, vanlig fil. Symlinker, ugyldig XML, omvendte
@@ -52,13 +52,13 @@ distanse, puls, HRV, hvilepuls, steg, kroppsmasse og VO2 max.
 ## Agentanalyse
 
 Den medfølgende `training-analysis`-skillen bruker bare
-`<mundsen_module_context>`. Den skiller observasjon fra tolkning, sier fra om
+`<mundsen_agent_module_context>`. Den skiller observasjon fra tolkning, sier fra om
 manglende data og behandler puls, HRV, hvilepuls, VO2 max og kroppsmasse som
 trender, ikke diagnoser.
 
 ## Backup og sletting
 
-Helsemodulens database og sammendrag inngår ikke i en Mundsen-release eller
+Helsemodulens database og sammendrag inngår ikke i en Mundsen Agent-release eller
 supportpakke. Brukeren må selv velge eventuell kryptert lokal backup. Full
 sletting er en eksplisitt handling mot modulens private statekatalog og skjer
 aldri ved vanlig avinstallasjon eller deaktivering.

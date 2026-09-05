@@ -7,13 +7,13 @@ from dataclasses import dataclass
 from pathlib import Path
 from threading import Event
 
-from mundsen.audit import AuditLogger
-from mundsen.bridge.job_store import MessageJob, PersistentJobStore
-from mundsen.bridge.telegram_client import TelegramError
-from mundsen.bridge.runtime import OffsetStore, TelegramBridge
-from mundsen.bridge.visualizations import VisualizationRenderer
-from mundsen.paths import MundsenPaths
-from mundsen.router.models import AgentResponse
+from mundsen_agent.audit import AuditLogger
+from mundsen_agent.bridge.job_store import MessageJob, PersistentJobStore
+from mundsen_agent.bridge.telegram_client import TelegramError
+from mundsen_agent.bridge.runtime import OffsetStore, TelegramBridge
+from mundsen_agent.bridge.visualizations import VisualizationRenderer
+from mundsen_agent.paths import MundsenAgentPaths
+from mundsen_agent.router.models import AgentResponse
 
 
 class FakeClient:
@@ -236,7 +236,7 @@ class TestTelegramRuntime(unittest.TestCase):
     def test_inline_visualization_is_sent_and_cleaned(self) -> None:
         root = Path(self.tempdir.name)
         renderer = VisualizationRenderer(
-            MundsenPaths.from_root(root / "Mundsen"),
+            MundsenAgentPaths.from_root(root / "Mundsen Agent"),
             language="nb",
         )
         bridge = TelegramBridge(

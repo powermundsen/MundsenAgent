@@ -10,7 +10,7 @@ import unittest
 from datetime import datetime, timezone
 from pathlib import Path
 
-from mundsen.audit import AuditLogger
+from mundsen_agent.audit import AuditLogger
 
 
 class TestAuditLogger(unittest.TestCase):

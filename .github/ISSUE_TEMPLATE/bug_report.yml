@@ -1,5 +1,5 @@
 name: Bug report
-description: Report a reproducible Mundsen problem
+description: Report a reproducible Mundsen Agent problem
 title: "[Bug]: "
 labels: [bug]
 body:
@@ -9,7 +9,7 @@ body:
   - type: input
     id: version
     attributes:
-      label: Mundsen version
+      label: Mundsen Agent version
       placeholder: 0.3.0
     validations:
       required: true

@@ -8,10 +8,10 @@ from datetime import datetime
 from pathlib import Path
 from unittest.mock import patch
 
-from mundsen.config import ConfigurationError, RuntimeSettings
-from mundsen.instance import InstanceSettings
-from mundsen.module_system import ModuleManager, ModuleRegistry
-from mundsen.paths import MundsenPaths
+from mundsen_agent.config import ConfigurationError, RuntimeSettings
+from mundsen_agent.instance import InstanceSettings
+from mundsen_agent.module_system import ModuleManager, ModuleRegistry
+from mundsen_agent.paths import MundsenAgentPaths
 
 
 @dataclass
@@ -38,7 +38,7 @@ class TestModuleRegistry(unittest.TestCase):
     def setUp(self) -> None:
         self.tempdir = tempfile.TemporaryDirectory()
         self.addCleanup(self.tempdir.cleanup)
-        self.paths = MundsenPaths.from_root(Path(self.tempdir.name) / "Mundsen")
+        self.paths = MundsenAgentPaths.from_root(Path(self.tempdir.name) / "Mundsen Agent")
         self.instance = InstanceSettings(
             1, "Fjord", "nb", "Europe/Oslo", "natural", "general", "auto"
         )

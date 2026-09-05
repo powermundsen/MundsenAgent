@@ -5,10 +5,10 @@ import unittest
 from pathlib import Path
 from threading import Event, Thread
 
-from mundsen.audit import AuditLogger
-from mundsen.router.models import AgentResponse, RouterMode
-from mundsen.router.router import AgentRouter
-from mundsen.router.state import RouterStateStore
+from mundsen_agent.audit import AuditLogger
+from mundsen_agent.router.models import AgentResponse, RouterMode
+from mundsen_agent.router.router import AgentRouter
+from mundsen_agent.router.state import RouterStateStore
 
 
 class FakeAdapter:
@@ -253,7 +253,7 @@ class TestAgentRouter(unittest.TestCase):
             state_store=self.store,
             audit=self.audit,
             extended_commands=True,
-            version_text="Mundsen 0.4.0",
+            version_text="Mundsen Agent 0.4.0",
             claude_model_aliases={"opus": "example-opus"},
         )
 

@@ -5,13 +5,13 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from mundsen.config import (
+from mundsen_agent.config import (
     MAX_CONFIG_BYTES,
     ConfigurationError,
     load_runtime_settings,
     parse_env_file,
 )
-from mundsen.paths import MundsenPaths, ensure_private_directories
+from mundsen_agent.paths import MundsenAgentPaths, ensure_private_directories
 
 
 class TestRuntimeConfiguration(unittest.TestCase):
@@ -20,7 +20,7 @@ class TestRuntimeConfiguration(unittest.TestCase):
         self.addCleanup(self.tempdir.cleanup)
         self.home = Path(self.tempdir.name) / "home"
         self.home.mkdir()
-        self.paths = MundsenPaths.from_environ({"HOME": str(self.home)})
+        self.paths = MundsenAgentPaths.from_environ({"HOME": str(self.home)})
         ensure_private_directories((self.paths.config_dir,))
 
     def write_runtime(self, text: str) -> None:

@@ -6,14 +6,14 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from mundsen.paths import (
-    MundsenPaths,
+from mundsen_agent.paths import (
+    MundsenAgentPaths,
     PathConfigurationError,
     ensure_private_directories,
 )
 
 
-class TestMundsenPaths(unittest.TestCase):
+class TestMundsenAgentPaths(unittest.TestCase):
     def setUp(self) -> None:
         self.tempdir = tempfile.TemporaryDirectory()
         self.addCleanup(self.tempdir.cleanup)
@@ -21,23 +21,23 @@ class TestMundsenPaths(unittest.TestCase):
         self.home.mkdir()
 
     def test_defaults_are_portable_and_side_effect_free(self) -> None:
-        paths = MundsenPaths.from_environ({"HOME": str(self.home)})
+        paths = MundsenAgentPaths.from_environ({"HOME": str(self.home)})
 
-        self.assertEqual(paths.config_dir, self.home / ".config" / "mundsen")
+        self.assertEqual(paths.config_dir, self.home / ".config" / "mundsen-agent")
         self.assertEqual(
-            paths.data_dir, self.home / ".local" / "share" / "mundsen"
+            paths.data_dir, self.home / ".local" / "share" / "mundsen-agent"
         )
         self.assertEqual(
-            paths.state_dir, self.home / ".local" / "state" / "mundsen"
+            paths.state_dir, self.home / ".local" / "state" / "mundsen-agent"
         )
-        self.assertEqual(paths.instance_dir, self.home / "MundsenInstance")
+        self.assertEqual(paths.instance_dir, self.home / "MundsenAgentInstance")
         self.assertFalse(paths.config_dir.exists())
         self.assertFalse(paths.state_dir.exists())
 
     def test_xdg_and_mundsen_overrides_are_respected(self) -> None:
         config_root = self.home / "xdg-config"
         custom_instance = self.home / "instance"
-        paths = MundsenPaths.from_environ(
+        paths = MundsenAgentPaths.from_environ(
             {
                 "HOME": str(self.home),
                 "XDG_CONFIG_HOME": str(config_root),
@@ -45,11 +45,11 @@ class TestMundsenPaths(unittest.TestCase):
             }
         )
 
-        self.assertEqual(paths.config_dir, config_root / "mundsen")
+        self.assertEqual(paths.config_dir, config_root / "mundsen-agent")
         self.assertEqual(paths.instance_dir, custom_instance)
 
     def test_portable_root_keeps_owned_paths_below_root(self) -> None:
-        paths = MundsenPaths.from_root("/opt/example-assistant")
+        paths = MundsenAgentPaths.from_root("/opt/example-assistant")
 
         self.assertEqual(paths.instance_dir, Path("/opt/example-assistant/instance"))
         self.assertEqual(
@@ -73,12 +73,12 @@ class TestMundsenPaths(unittest.TestCase):
 
     def test_relative_override_is_rejected(self) -> None:
         with self.assertRaises(PathConfigurationError):
-            MundsenPaths.from_environ(
+            MundsenAgentPaths.from_environ(
                 {"HOME": str(self.home), "MUNDSEN_STATE_DIR": "relative/state"}
             )
 
     def test_explicit_bootstrap_creates_private_directories(self) -> None:
-        paths = MundsenPaths.from_environ({"HOME": str(self.home)})
+        paths = MundsenAgentPaths.from_environ({"HOME": str(self.home)})
         ensure_private_directories(paths.private_runtime_directories())
 
         for path in paths.private_runtime_directories():

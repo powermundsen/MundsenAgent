@@ -6,14 +6,14 @@ MUNDSEN_BUNDLE_VERSION="0.3.0"
 
 usage() {
     printf '%s\n' \
-        "Usage: bash Mundsen-${MUNDSEN_BUNDLE_VERSION}-installer.sh [DIRECTORY]" \
+        "Usage: bash MundsenAgent-${MUNDSEN_BUNDLE_VERSION}-installer.sh [DIRECTORY]" \
         "       installer/install.sh [DIRECTORY] [--no-setup]" \
         "" \
-        "Installs Mundsen and its private runtime below one selected directory."
+        "Installs Mundsen Agent and its private runtime below one selected directory."
 }
 
 fail() {
-    printf 'Mundsen installer: %s\n' "$1" >&2
+    printf 'Mundsen Agent installer: %s\n' "$1" >&2
     exit 1
 }
 
@@ -42,7 +42,7 @@ while [ "$#" -gt 0 ]; do
 done
 
 if [ -z "$selected_root" ]; then
-    default_root="$HOME/Mundsen"
+    default_root="$HOME/Mundsen Agent"
     if [ -t 0 ]; then
         printf 'Installation directory [%s]: ' "$default_root"
         IFS= read -r selected_root
@@ -75,15 +75,15 @@ while [ "$git_probe" != "/" ]; do
     git_probe="$(dirname "$git_probe")"
 done
 
-root_marker="$selected_root/.mundsen-root"
+root_marker="$selected_root/.mundsen-agent-root"
 if [ -L "$root_marker" ] || { [ -e "$root_marker" ] && [ ! -f "$root_marker" ]; }; then
     fail "installation root marker is unsafe"
 fi
 if [ -f "$root_marker" ]; then
     marker_bytes="$(wc -c < "$root_marker" | tr -d '[:space:]')"
     marker_value="$(LC_ALL=C head -c 64 "$root_marker")"
-    if [ "$marker_bytes" != "21" ] || \
-       [ "$marker_value" != "mundsen-runtime-root" ]; then
+    if [ "$marker_bytes" != "27" ] || \
+       [ "$marker_value" != "mundsen-agent-runtime-root" ]; then
         fail "installation root marker is invalid"
     fi
 else
@@ -93,13 +93,13 @@ else
     legacy_runtime=0
     if [ -L "$selected_root/current" ] && \
        [ -d "$selected_root/releases" ] && \
-       [ -x "$selected_root/bin/mundsen" ]; then
+       [ -x "$selected_root/bin/mundsen-agent" ]; then
         legacy_runtime=1
     fi
     if [ -n "$existing_entry" ] && [ "$legacy_runtime" -ne 1 ]; then
-        fail "installation directory must be empty or an existing Mundsen runtime"
+        fail "installation directory must be empty or an existing Mundsen Agent runtime"
     fi
-    printf 'mundsen-runtime-root\n' > "$root_marker"
+    printf 'mundsen-agent-runtime-root\n' > "$root_marker"
 fi
 chmod 600 "$root_marker"
 chmod 700 "$selected_root"
@@ -124,7 +124,7 @@ case "$available_kib" in
         ;;
 esac
 
-temporary_dir="$(mktemp -d "${TMPDIR:-/tmp}/mundsen-install.XXXXXX")"
+temporary_dir="$(mktemp -d "${TMPDIR:-/tmp}/mundsen-agent-install.XXXXXX")"
 cleanup() {
     rm -rf "$temporary_dir"
 }
@@ -142,14 +142,14 @@ if [ -z "$source_root" ] && [ -f "$script_path" ]; then
         if [ -s "$temporary_dir/payload.tar.gz" ] && \
            tar -tzf "$temporary_dir/payload.tar.gz" >/dev/null 2>&1; then
             tar -xzf "$temporary_dir/payload.tar.gz" -C "$temporary_dir"
-            source_root="$temporary_dir/mundsen-$MUNDSEN_BUNDLE_VERSION"
+            source_root="$temporary_dir/mundsen-agent-$MUNDSEN_BUNDLE_VERSION"
         fi
     fi
 fi
 if [ -z "$source_root" ]; then
     source_root="$(cd "$(dirname "$script_path")/.." && pwd -P)"
 fi
-[ -f "$source_root/src/mundsen/__init__.py" ] || fail "release payload is missing"
+[ -f "$source_root/src/mundsen_agent/__init__.py" ] || fail "release payload is missing"
 
 mkdir -p \
     "$selected_root/releases" \
@@ -231,7 +231,7 @@ if [ -d "$release_dir" ]; then
         -c '
 import sys
 from pathlib import Path
-from mundsen.release import RELEASE_METADATA_NAME, payload_matches_release
+from mundsen_agent.release import RELEASE_METADATA_NAME, payload_matches_release
 
 payload = Path(sys.argv[1])
 release = Path(sys.argv[2])
@@ -257,28 +257,28 @@ if [ -e "$current_link" ] || [ -L "$current_link" ]; then
         cd "$current_link" 2>/dev/null && pwd -P
     )" || fail "current release link is broken"
     if [ "$current_target" != "$release_dir" ]; then
-        fail "a different Mundsen release is active; use mundsen upgrade"
+        fail "a different Mundsen Agent release is active; use mundsen-agent upgrade"
     fi
 fi
 ln -sfn "$release_dir" "$current_link"
 
-wrapper="$selected_root/bin/mundsen"
+wrapper="$selected_root/bin/mundsen-agent"
 if [ -L "$wrapper" ]; then
     fail "command wrapper must not be a symlink"
 fi
-wrapper_stage="$temporary_dir/mundsen-wrapper"
+wrapper_stage="$temporary_dir/mundsen-agent-wrapper"
 printf '%s\n' \
     '#!/usr/bin/env bash' \
     'set -euo pipefail' \
     'wrapper_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"' \
-    'mundsen_root="$(cd "$wrapper_dir/.." && pwd -P)"' \
-    'export MUNDSEN_HOME="$mundsen_root"' \
-    'export PYTHONPATH="$mundsen_root/current/src"' \
-    'export UV_PYTHON_INSTALL_DIR="$mundsen_root/tools/python"' \
-    'export UV_PYTHON_BIN_DIR="$mundsen_root/tools/bin"' \
-    'export UV_CACHE_DIR="$mundsen_root/cache/uv"' \
+    'mundsen_agent_root="$(cd "$wrapper_dir/.." && pwd -P)"' \
+    'export MUNDSEN_HOME="$mundsen_agent_root"' \
+    'export PYTHONPATH="$mundsen_agent_root/current/src"' \
+    'export UV_PYTHON_INSTALL_DIR="$mundsen_agent_root/tools/python"' \
+    'export UV_PYTHON_BIN_DIR="$mundsen_agent_root/tools/bin"' \
+    'export UV_CACHE_DIR="$mundsen_agent_root/cache/uv"' \
     'export PYTHONDONTWRITEBYTECODE=1' \
-    'exec "$mundsen_root/tools/bin/python3" -m mundsen "$@"' \
+    'exec "$mundsen_agent_root/tools/bin/python3" -m mundsen_agent "$@"' \
     > "$wrapper_stage"
 chmod 700 "$wrapper_stage"
 mv -f "$wrapper_stage" "$wrapper"
@@ -290,7 +290,7 @@ env \
     -c '
 import sys
 from pathlib import Path
-from mundsen.release import (
+from mundsen_agent.release import (
     RELEASE_METADATA_NAME,
     record_installed_release,
     verify_installed_release,
@@ -363,7 +363,7 @@ if [ "${MUNDSEN_SKIP_PROVIDER_INSTALL:-0}" != "1" ]; then
     fi
 fi
 
-printf '\nMundsen %s is installed in %s\n' \
+printf '\nMundsen Agent %s is installed in %s\n' \
     "$MUNDSEN_BUNDLE_VERSION" "$selected_root"
 printf 'Local command: %s\n\n' "$wrapper"
 

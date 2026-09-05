@@ -16,7 +16,7 @@ kompatibilitetsbrudd. `release-manifest.json` er den maskinlesbare kontrakten.
 - Valgfrie private Telegram-vedlegg med størrelsesgrense, genererte filnavn,
   krasjtrygg levetid og opprydding etter svar eller kansellering.
 - Valgfri lokal tale-/lydtranskribering gjennom én eksplisitt executable som
-  kjøres uten shell og uten Mundsen-secrets i miljøet.
+  kjøres uten shell og uten Mundsen Agent-secrets i miljøet.
 - Valgfri uttrekking av sikre SVG- og Mermaid-blokker til Telegram-dokumenter,
   med valgfri lokal Mermaid-renderer og retryposisjon per artefakt.
 - Valgfri levende Telegram-progress, utvidede modell-/reasoningkommandoer,
@@ -39,7 +39,7 @@ kompatibilitetsbrudd. `release-manifest.json` er den maskinlesbare kontrakten.
   utviklingshistorikk beholdes separat og eksponeres ikke.
 - Releaseartefakter med maskinlesbart manifest, samlet `SHA256SUMS` og en
   sperre som krever eksplisitt bekreftet GitHub release immutability.
-- `mundsen update check|download|install` for stabil GitHub Release-discovery,
+- `mundsen-agent update check|download|install` for stabil GitHub Release-discovery,
   manifestvisning, checksumverifisert nedlasting og kontrollert installasjon
   gjennom eksisterende health-, backup- og rollbackflyt.
 - Ukentlig updatevarsel med berørte moduler, persondataeffekt og migreringer.
@@ -53,14 +53,14 @@ kompatibilitetsbrudd. `release-manifest.json` er den maskinlesbare kontrakten.
   Health XML, eventdeduplisering og lokale Markdown-/JSON-sammendrag.
 - Bundled `training-analysis`-skill med tydelig grense mellom
   treningsrefleksjon og medisinsk rådgivning.
-- `mundsen logs` for filtrert lokal driftsmetadata og `mundsen support-bundle`
+- `mundsen-agent logs` for filtrert lokal driftsmetadata og `mundsen-agent support-bundle`
   for en privat, sanitert diagnostikkpakke uten config eller helsedata.
 - Arbeidskopi- og historikkskann for private stier, credentials, private nett,
   runtimefiler og reserverte private identifikatorer.
 
 ### Changed
 
-- Prosjektet er omdøpt fra utviklingsnavnet til Mundsen før første støttede
+- Prosjektet er omdøpt fra utviklingsnavnet til Mundsen Agent før første støttede
   release. Python-pakke, CLI, `MUNDSEN_*`-innstillinger, runtime-stier,
   service-ID-er, releaseartefakter og standard update-repo bruker samme navn.
 - CI bruker pinned checkout v7.0.1, setup-python v7.0.0 og upload-artifact
@@ -83,7 +83,7 @@ kompatibilitetsbrudd. `release-manifest.json` er den maskinlesbare kontrakten.
   (`release.payload_matches_release`). En omkjøring med endret kode under
   samme versjon feiler tydelig i stedet for å beholde den gamle utgivelsen
   stille. En uendret payload installeres fortsatt på nytt uten feil.
-- `mundsen training` uten underkommando velger nå `status` som dokumentert.
+- `mundsen-agent training` uten underkommando velger nå `status` som dokumentert.
 - Nedlastede releasearkiv checksumverifiseres før kommandoen omtaler dem som
   verifisert.
 
@@ -159,7 +159,7 @@ kompatibilitetsbrudd. `release-manifest.json` er den maskinlesbare kontrakten.
   runtime-state.
 - Onboardingen forklarer korrekt at meldinger går gjennom Telegram og valgt
   modellleverandør, og at en native agentprosess kan lese det OS-brukeren kan
-  lese selv om Mundsen bare bruker filer utenfor instansen etter bestilling.
+  lese selv om Mundsen Agent bare bruker filer utenfor instansen etter bestilling.
 - Pakken utfører ingen filskriving, nettverkskall eller prosessstart ved import.
   Testene bruker midlertidige kataloger, falske leverandører og ingen ekte
   hjemmekatalog eller abonnementskall.

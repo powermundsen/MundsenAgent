@@ -10,7 +10,7 @@ release etter restart og går automatisk tilbake ved feil.
 
 ## Prinsipp
 
-Mundsen oppgraderes bare fra en versjonert GitHub Release og bare etter
+Mundsen Agent oppgraderes bare fra en versjonert GitHub Release og bare etter
 eksplisitt godkjenning. `main`, tilfeldige commits og automatisk
 selvoppdatering er ikke gyldige produksjonskilder.
 
@@ -26,14 +26,14 @@ Den lokale bridgen kan én gang i uken:
 5. Sende ett varsel og vente på en separat, eksplisitt installasjonskommando.
 
 Sjekken skal ikke sende lokal versjon, maskinidentitet, modulvalg eller
-bruksdata til Mundsen.
+bruksdata til Mundsen Agent.
 
 Manuell kontroll og nedlasting:
 
 ```sh
-mundsen update check
-mundsen update download
-mundsen update install
+mundsen-agent update check
+mundsen-agent update download
+mundsen-agent update install
 ```
 
 `check` henter bare release-JSON og manifest. `download` henter og verifiserer
@@ -53,7 +53,7 @@ backup- og rollbackflyten. Uten `--yes` kreves lokal bekreftelse.
   "maximum_instance_schema": 1,
   "files": [
     {
-      "path": "mundsen.tar.gz",
+      "path": "mundsen-agent.tar.gz",
       "sha256": "<sha256>"
     }
   ],
@@ -79,9 +79,9 @@ Etter godkjenning gjør den lokale updateren:
 6. Verifisere lokalt manifest, arkivchecksum og skjemakompatibilitet.
 7. Avvise releasen dersom den deklarerer en migrering. 0.3.0 har ingen
    migreringsmotor.
-8. Installere til `<Mundsen>/releases/<versjon>` og lagre et privat
+8. Installere til `<Mundsen Agent>/releases/<versjon>` og lagre et privat
    filintegritetsmanifest.
-9. Bytte `<Mundsen>/current` atomisk og restarte tjenesten når den er installert.
+9. Bytte `<Mundsen Agent>/current` atomisk og restarte tjenesten når den er installert.
 10. Kjøre en ny health check og verifisere at beskyttede filer er uendret.
 
 Ved feil før atomisk bytte forblir gammel release aktiv. Ved feil etter bytte
@@ -142,7 +142,7 @@ eksplisitt godkjenning:
 - **Vil/kan de ikke bruke GitHub:** de sender en patch (`git format-patch` /
   diff) som eieren gjennomgår og committer selv.
 
-I alle tilfeller er det eieren som merger inn i Mundsen. Ingen bruker får en
+I alle tilfeller er det eieren som merger inn i Mundsen Agent. Ingen bruker får en
 delt administratorcredential.
 
 ## Oppbevaring

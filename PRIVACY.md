@@ -2,18 +2,18 @@
 
 ## Grunnprinsipp
 
-Mundsen distribuerer kode, ikke mennesker. En personlig instans tilhører
-brukeren og skal ikke lastes opp til Mundsen, en sentral tjeneste eller en annen
+Mundsen Agent distribuerer kode, ikke mennesker. En personlig instans tilhører
+brukeren og skal ikke lastes opp til Mundsen Agent, en sentral tjeneste eller en annen
 brukers installasjon.
 
 ## Datakategorier
 
-Mundsen skiller mellom:
+Mundsen Agent skiller mellom:
 
 | Kategori | Eksempler | Lagring |
 |---|---|---|
-| Plattformkode | bridge, router, installer, standardskills | versjonert Mundsen-release |
-| Personlig instans | persona, profil, minne, åpne tråder, påminnelser | lokal instanskatalog, aldri Mundsen-Git |
+| Plattformkode | bridge, router, installer, standardskills | versjonert Mundsen Agent-release |
+| Personlig instans | persona, profil, minne, åpne tråder, påminnelser | lokal instanskatalog, aldri Mundsen Agent-Git |
 | Hemmeligheter | bot-token, chat-ID, deploy key, integrasjonstoken | lokal secretsfil eller verktøyets egen credential store |
 | Runtime-state | sesjons-ID-er, kø, vedlegg, midlertidige filer | lokal state-katalog |
 | Operasjonelle logger | tidspunkt, komponent, resultat, feilkategori | lokal loggkatalog |
@@ -34,14 +34,14 @@ Når Telegram-modulen er aktiv:
 
 Ved automatisk fallback kan samme melding sendes til begge agentleverandørene
 dersom den første feiler. Claude, OpenAI og Telegram behandler data etter
-vilkårene for brukerens egne kontoer. Mundsen driver ingen mellomliggende
+vilkårene for brukerens egne kontoer. Mundsen Agent driver ingen mellomliggende
 skytjeneste og mottar ingen kopi.
 
 Valgfrie moduler kan gi flere lokale eller eksterne dataflyter. Hver modul skal
 dokumentere datakilder, mottakere, lagring og sletting før den kan aktiveres.
 
 Når `local-health` aktiveres, forblir Apple Health XML og SQLite-databasen
-lokale. Mundsen genererer et begrenset treningssammendrag. Dette sammendraget
+lokale. Mundsen Agent genererer et begrenset treningssammendrag. Dette sammendraget
 sendes til valgt agentleverandør når agenten svarer, på samme måte som øvrig
 eksplisitt instanskontekst. Rådatabase, eksportfil og import-ID sendes ikke.
 
@@ -58,14 +58,14 @@ levering. Ingen av funksjonene er aktive som standard.
 
 ## Lokal lagring
 
-Den portable installasjonen samler alle Mundsen-data under katalogen brukeren
+Den portable installasjonen samler alle Mundsen Agent-data under katalogen brukeren
 velger:
 
-- personlig instans: `<Mundsen>/instance`
-- konfigurasjon og hemmeligheter: `<Mundsen>/config`
-- runtime-state og logger: `<Mundsen>/state`
-- cache og nedlastede verktøy: `<Mundsen>/cache` og `<Mundsen>/tools`
-- separate CLI-er og credentiallagring: `<Mundsen>/providers`
+- personlig instans: `<Mundsen Agent>/instance`
+- konfigurasjon og hemmeligheter: `<Mundsen Agent>/config`
+- runtime-state og logger: `<Mundsen Agent>/state`
+- cache og nedlastede verktøy: `<Mundsen Agent>/cache` og `<Mundsen Agent>/tools`
+- separate CLI-er og credentiallagring: `<Mundsen Agent>/providers`
 
 Operativsystemets tjenesteregistrering ligger i brukerens vanlige LaunchAgents-
 eller systemd-katalog og inneholder bare kommando- og runtime-stier, ikke
@@ -94,7 +94,7 @@ eksplisitt, tidsbegrenset og forklart til brukeren før aktivering.
 ## Oppdateringer
 
 Den ukentlige oppdateringssjekken henter GitHub release-metadata og det lille,
-maskinlesbare releasemanifestet fra en kontrollert GitHub Release. Mundsen
+maskinlesbare releasemanifestet fra en kontrollert GitHub Release. Mundsen Agent
 sender ikke lokal versjon, modulvalg, maskinidentitet eller bruksdata tilbake.
 
 Oppdatering er enveis:
@@ -105,7 +105,7 @@ Oppdatering er enveis:
 
 ## Telemetri
 
-Mundsen har ingen sentral telemetri, analyse, crash reporting eller
+Mundsen Agent har ingen sentral telemetri, analyse, crash reporting eller
 brukersporing. En valgfri observability-modul må peke på en mottaker brukeren
 selv kontrollerer og være av som standard.
 
@@ -114,7 +114,7 @@ selv kontrollerer og være av som standard.
 Brukeren kan eksportere den personlige instanskatalogen som vanlige tekstfiler.
 Full lokal sletting krever at instans, secrets, state, cache, logger og eventuelle
 sikkerhetskopier fjernes. Telegram, Claude og OpenAI kan ha egne
-oppbevaringsregler som ligger utenfor Mundsens kontroll.
+oppbevaringsregler som ligger utenfor Mundsen Agents kontroll.
 
 ## Bidrag og testdata
 

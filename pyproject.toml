@@ -3,7 +3,7 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "mundsen"
+name = "mundsen-agent"
 version = "0.3.0"
 description = "Private-by-default building blocks for local personal assistants"
 readme = "README.md"
@@ -11,7 +11,7 @@ requires-python = ">=3.10"
 dependencies = []
 
 [project.scripts]
-mundsen = "mundsen.cli:main"
+mundsen-agent = "mundsen_agent.cli:main"
 
 [tool.setuptools]
 package-dir = {"" = "src"}
@@ -20,7 +20,7 @@ package-dir = {"" = "src"}
 where = ["src"]
 
 [tool.setuptools.package-data]
-mundsen = [
+mundsen_agent = [
     "templates/*.tmpl",
     "bundled_skills/*/SKILL.md",
     "bundled_skills/*/agents/*.yaml",

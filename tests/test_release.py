@@ -9,8 +9,8 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-from mundsen.paths import MundsenPaths
-from mundsen.release import (
+from mundsen_agent.paths import MundsenAgentPaths
+from mundsen_agent.release import (
     ReleaseError,
     active_version,
     install_release,
@@ -24,17 +24,17 @@ class TestReleaseManagement(unittest.TestCase):
         self.tempdir = tempfile.TemporaryDirectory()
         self.addCleanup(self.tempdir.cleanup)
         root = Path(self.tempdir.name)
-        self.paths = MundsenPaths.from_root(root / "Mundsen")
+        self.paths = MundsenAgentPaths.from_root(root / "Mundsen Agent")
         self.artifacts = root / "artifacts"
         self.artifacts.mkdir()
 
     def make_release(self, version: str) -> Path:
-        archive_name = f"mundsen-{version}.tar.gz"
+        archive_name = f"mundsen-agent-{version}.tar.gz"
         archive = self.artifacts / archive_name
         content = f'__version__ = "{version}"\n'.encode()
         with tarfile.open(archive, "w:gz") as bundle:
             member = tarfile.TarInfo(
-                f"mundsen-{version}/src/mundsen/__init__.py"
+                f"mundsen-agent-{version}/src/mundsen_agent/__init__.py"
             )
             member.size = len(content)
             member.mode = 0o644
@@ -81,7 +81,7 @@ class TestReleaseManagement(unittest.TestCase):
         with self.assertRaises(ReleaseError):
             install_release(self.paths, manifest_link)
 
-        archive = self.artifacts / "mundsen-0.1.0.tar.gz"
+        archive = self.artifacts / "mundsen-agent-0.1.0.tar.gz"
         archive_target = self.artifacts / "archive-target.tar.gz"
         archive.rename(archive_target)
         archive.symlink_to(archive_target)
@@ -89,7 +89,7 @@ class TestReleaseManagement(unittest.TestCase):
             install_release(self.paths, manifest)
 
     def test_archive_traversal_is_rejected(self) -> None:
-        archive = self.artifacts / "mundsen-0.1.0.tar.gz"
+        archive = self.artifacts / "mundsen-agent-0.1.0.tar.gz"
         with tarfile.open(archive, "w:gz") as bundle:
             member = tarfile.TarInfo("../outside")
             member.size = 1
@@ -120,10 +120,10 @@ class TestReleaseManagement(unittest.TestCase):
             install_release(self.paths, manifest)
 
     def test_oversized_archive_member_is_rejected(self) -> None:
-        archive = self.artifacts / "mundsen-0.1.0.tar.gz"
+        archive = self.artifacts / "mundsen-agent-0.1.0.tar.gz"
         with tarfile.open(archive, "w:gz") as bundle:
             member = tarfile.TarInfo(
-                "mundsen-0.1.0/src/mundsen/__init__.py"
+                "mundsen-agent-0.1.0/src/mundsen_agent/__init__.py"
             )
             member.size = 2
             bundle.addfile(member, io.BytesIO(b"xx"))
@@ -149,7 +149,7 @@ class TestReleaseManagement(unittest.TestCase):
             encoding="utf-8",
         )
 
-        with patch("mundsen.release.MAX_ARCHIVE_FILE_BYTES", 1):
+        with patch("mundsen_agent.release.MAX_ARCHIVE_FILE_BYTES", 1):
             with self.assertRaises(ReleaseError):
                 install_release(self.paths, manifest)
 
@@ -165,7 +165,7 @@ class TestReleaseManagement(unittest.TestCase):
     def test_installed_release_integrity_detects_file_changes(self) -> None:
         install_release(self.paths, self.make_release("0.1.0"))
         release = self.paths.releases_dir / "0.1.0"
-        source = release / "src" / "mundsen" / "__init__.py"
+        source = release / "src" / "mundsen_agent" / "__init__.py"
         source.write_text('__version__ = "tampered"\n', encoding="utf-8")
 
         with self.assertRaisesRegex(ReleaseError, "integrity"):
@@ -185,7 +185,7 @@ class TestReleaseManagement(unittest.TestCase):
         install_release(self.paths, self.make_release("0.1.0"))
         install_release(self.paths, self.make_release("0.2.0"))
         metadata = (
-            self.paths.releases_dir / "0.1.0" / ".mundsen-release.json"
+            self.paths.releases_dir / "0.1.0" / ".mundsen-agent-release.json"
         )
         data = json.loads(metadata.read_text(encoding="utf-8"))
         data["minimum_instance_schema"] = 2

@@ -1,7 +1,7 @@
 # Valgfrie lokale connectorer
 
 Kalender, morgenbrief, observability og smarthjem varierer mellom
-installasjoner. Mundsen inneholder derfor ingen private endepunkter, kontonavn,
+installasjoner. Mundsen Agent inneholder derfor ingen private endepunkter, kontonavn,
 enhetsnavn eller credentials. I stedet ligger fire funksjonelle, men avskrudd
 connectorplasser klare i modulregisteret:
 
@@ -22,7 +22,7 @@ MUNDSEN_OBSERVABILITY_COMMAND=/absolute/path/to/observability-connector
 
 Executable-en må være en absolutt, ikke-symlinket fil. Den startes uten shell
 og med et minimalt miljø som ikke inneholder Telegram-token, GitHub-token eller
-providercredentials. Den kjører fortsatt som den lokale Mundsen-brukeren og må
+providercredentials. Den kjører fortsatt som den lokale Mundsen Agent-brukeren og må
 derfor være en betrodd lokal executable.
 
 ## Kommandokontrakt
