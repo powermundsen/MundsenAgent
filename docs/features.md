@@ -1,6 +1,6 @@
 # Valgfrie runtimefunksjoner
 
-Mundsen skiller mellom **features**, som endrer bridge- eller routeradferd, og
+Mundsen Agent skiller mellom **features**, som endrer bridge- eller routeradferd, og
 **modules**, som kobler inn en lokal datakilde eller planlagt integrasjon.
 Begge deler er av som standard. En feature aktiveres bare når navnet står i den
 kommaseparerte `MUNDSEN_FEATURES`-verdien i `config/runtime.env`.
@@ -10,12 +10,12 @@ MUNDSEN_FEATURES=attachments,live-progress,extended-commands
 ```
 
 Ukjente navn, duplikater og manglende avhengigheter stopper oppstart med en
-sanitert konfigurasjonsfeil. `mundsen health` viser hvilke features som er
+sanitert konfigurasjonsfeil. `mundsen-agent health` viser hvilke features som er
 aktive.
 
 ## Feature-registeret
 
-`src/mundsen/features.py` er den eneste katalogen over innebygde features. En
+`src/mundsen_agent/features.py` er den eneste katalogen over innebygde features. En
 ny feature får:
 
 1. én `FeatureSpec` med navn, beskrivelse, avhengigheter og eventuelle
@@ -25,7 +25,7 @@ ny feature får:
 
 Featurekode skal aldri lese secrets den ikke trenger. Lokale hjelpeprosesser får
 et minimalt prosessmiljø uten Telegram-token, GitHub-token eller
-agentcredentials. De kjører likevel som den lokale Mundsen-brukeren og må være
+agentcredentials. De kjører likevel som den lokale Mundsen Agent-brukeren og må være
 betrodde executables.
 
 ## `attachments`
@@ -53,14 +53,14 @@ MUNDSEN_FEATURES=attachments,local-transcription
 MUNDSEN_TRANSCRIBE_COMMAND=/absolute/path/to/local-transcriber
 ```
 
-Mundsen kjører executable-en uten shell som:
+Mundsen Agent kjører executable-en uten shell som:
 
 ```text
 /absolute/path/to/local-transcriber /private/path/to/input.ogg
 ```
 
 Transkripsjonen leses fra UTF-8 stdout. Stderr skjules, output er begrenset,
-og prosessen arver ikke Mundsen-secrets. Mundsen installerer ingen modell eller
+og prosessen arver ikke Mundsen Agent-secrets. Mundsen Agent installerer ingen modell eller
 transkriberer automatisk. Dette gjør funksjonen kompatibel med blant annet en
 lokal whisper.cpp-wrapper uten å binde kjernen til ett verktøy.
 

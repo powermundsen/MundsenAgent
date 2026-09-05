@@ -7,7 +7,7 @@ secrets/
 secrets.*
 
 # Personal instances and runtime
-MundsenInstance/
+MundsenAgentInstance/
 instances/
 runtime/
 instance/
@@ -19,7 +19,7 @@ releases/
 service/
 cache/
 current
-.mundsen-root
+.mundsen-agent-root
 state/
 attachments/
 logs/

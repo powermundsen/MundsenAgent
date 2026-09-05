@@ -11,12 +11,12 @@ tilgang til en eksisterende assistent.
 
 - macOS på Intel eller Apple Silicon
 - `curl`, `tar` og minst 1,5 GiB ledig diskplass
-- tilgang til det offentlige Mundsen-repoet eller en versjonert installasjonspakke
+- tilgang til det offentlige Mundsen Agent-repoet eller en versjonert installasjonspakke
 - Claude- og ChatGPT-abonnement for agentene som skal brukes
 - egen Telegram-bot og én godkjent privat chat
 
 Installeren henter administrert Python 3.12 og de offisielle Claude Code- og
-Codex CLI-installasjonene under den valgte Mundsen-katalogen. Maskinen trenger
+Codex CLI-installasjonene under den valgte Mundsen Agent-katalogen. Maskinen trenger
 ikke lokal modell, GPU eller Apple Silicon.
 
 Native macOS er standard. En egen lokal runtimebruker anbefales for å begrense
@@ -29,7 +29,7 @@ tjenestehåndtering og rollback er testet der.
 Brukeren eller administratoren må ha:
 
 1. En egen Telegram-bot hos BotFather.
-2. Tilgang til det offentlige Mundsen-repoet eller en kontrollert
+2. Tilgang til det offentlige Mundsen Agent-repoet eller en kontrollert
    installasjonspakke. Vanlig lesing krever ikke GitHub-innlogging.
 3. Claude-abonnement dersom Claude skal brukes.
 4. ChatGPT-abonnement dersom Codex skal brukes.
@@ -40,8 +40,8 @@ token skal aldri sendes i chat eller lagres i repoet.
 ## To kommandoer fra repo
 
 ```sh
-git clone https://github.com/powermundsen/Mundsen.git "$HOME/Mundsen-source"
-bash "$HOME/Mundsen-source/installer/install.sh" "$HOME/Mundsen"
+git clone https://github.com/powermundsen/MundsenAgent.git "$HOME/MundsenAgent-source"
+bash "$HOME/MundsenAgent-source/installer/install.sh" "$HOME/MundsenAgent"
 ```
 
 En versjonert, selvutpakkende installasjonspakke skal erstatte kloningen når
@@ -49,7 +49,7 @@ den isolerte pilotporten er bestått. `main` er fortsatt bare en utviklingskilde
 
 Kildeklonen og runtimekatalogen skal aldri være samme katalog. Installeren
 avviser runtime under en Git-arbeidskopi, umerkede kataloger som allerede
-inneholder filer, og en ugyldig Mundsen-rotmarkør. Dermed kan instans,
+inneholder filer, og en ugyldig Mundsen Agent-rotmarkør. Dermed kan instans,
 konfigurasjon og provider-auth ikke havne i kildekoderepoet ved et uhell.
 
 ## Implementert installasjonsflyt
@@ -57,8 +57,8 @@ konfigurasjon og provider-auth ikke havne i kildekoderepoet ved et uhell.
 Installeren:
 
 1. Kontrollerer operativsystem, CPU-arkitektur, diskplass, `curl` og `tar`.
-2. Krever en tom eller tidligere merket Mundsen-rot og setter modus `0700`.
-3. Legger Mundsen i en versjonert releasekatalog.
+2. Krever en tom eller tidligere merket Mundsen Agent-rot og setter modus `0700`.
+3. Legger Mundsen Agent i en versjonert releasekatalog.
 4. Installerer administrert Python 3.12 lokalt.
 5. Starter de offisielle installasjonene av Claude Code og Codex CLI i et tomt,
    allowlistet miljø med egne HOME-, XDG- og credentialkataloger.
@@ -80,7 +80,7 @@ native maskinvare til et indirekte krav.
 
 | Innhold | Sti under valgt rot | Rettighet |
 |---|---|---|
-| Mundsen-releases | `releases/<versjon>` | `0700` |
+| Mundsen Agent-releases | `releases/<versjon>` | `0700` |
 | Aktiv release | `current` | atomisk symlink |
 | Personlig instans | `instance/` | `0700` |
 | Runtimekonfig | `config/runtime.env` | `0600` |
@@ -95,7 +95,7 @@ native maskinvare til et indirekte krav.
 Førstegangsinstallasjonen oppretter:
 
 ```text
-<Mundsen>/instance/
+<Mundsen Agent>/instance/
 ├── instance.yaml
 ├── AGENTS.md
 ├── CLAUDE.md
@@ -112,12 +112,12 @@ Førstegangsinstallasjonen oppretter:
 Ved setup opprettes også administrerte providerlenker:
 
 ```text
-<Mundsen>/providers/home/.claude/skills/
-<Mundsen>/providers/home/.agents/skills/
+<Mundsen Agent>/providers/home/.claude/skills/
+<Mundsen Agent>/providers/home/.agents/skills/
 ```
 
-De peker til Mundsens bundled skills og eventuelle private skills i
-`instance/skills/`. Mundsen avviser navnekollisjoner og rører ikke urelaterte
+De peker til Mundsen Agents bundled skills og eventuelle private skills i
+`instance/skills/`. Mundsen Agent avviser navnekollisjoner og rører ikke urelaterte
 provider-skills.
 
 Ingen fil skal inneholde fakta om en ekte person før brukeren eller assistenten
@@ -141,7 +141,7 @@ Ikke-hemmelige valg ligger i `config/runtime.env`:
 ```dotenv
 MUNDSEN_MODULES=
 MUNDSEN_UPDATE_CHECK=1
-MUNDSEN_UPDATE_REPOSITORY=powermundsen/Mundsen
+MUNDSEN_UPDATE_REPOSITORY=powermundsen/MundsenAgent
 ```
 
 `MUNDSEN_MODULES` er tom som standard. Se [local-health](local-health.md) for
@@ -154,7 +154,7 @@ skrive en hemmelig verdi til terminaloutput.
 
 En vellykket installasjon skal vise:
 
-- aktiv, verifisert Mundsen-versjon
+- aktiv, verifisert Mundsen Agent-versjon
 - gyldig instansskjema
 - private filrettigheter
 - tilgjengelig valgt agent-CLI
@@ -169,7 +169,7 @@ Uten godkjenning starter førstesamtalen først når brukeren selv skriver.
 
 En endret `HOME` er ikke alene en sikker installasjonstest. Et
 leverandørinstallasjonsprogram kan fortsatt finne og endre globale verktøy via
-`PATH` eller andre arvede miljøvariabler. Mundsen kjører derfor begge
+`PATH` eller andre arvede miljøvariabler. Mundsen Agent kjører derfor begge
 leverandørinstallasjonene med `env -i` og en liten allowlist.
 
 Utviklere skal aldri kjøre disse installasjonene mot en bruker som allerede

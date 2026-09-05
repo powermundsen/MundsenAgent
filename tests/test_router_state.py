@@ -6,8 +6,8 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from mundsen.router.models import RouterMode, RouterState
-from mundsen.router.state import RouterStateError, RouterStateStore
+from mundsen_agent.router.models import RouterMode, RouterState
+from mundsen_agent.router.state import RouterStateError, RouterStateStore
 
 
 class TestRouterStateStore(unittest.TestCase):

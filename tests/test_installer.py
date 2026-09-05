@@ -39,12 +39,12 @@ class TestInstaller(unittest.TestCase):
             self.assertEqual(result.returncode, 0, result.stderr)
             self.assertEqual((root / "current").resolve().name, "0.3.0")
             self.assertEqual(
-                (root / ".mundsen-root").read_text(encoding="utf-8"),
-                "mundsen-runtime-root\n",
+                (root / ".mundsen-agent-root").read_text(encoding="utf-8"),
+                "mundsen-agent-runtime-root\n",
             )
-            self.assertEqual((root / ".mundsen-root").stat().st_mode & 0o777, 0o600)
+            self.assertEqual((root / ".mundsen-agent-root").stat().st_mode & 0o777, 0o600)
             version = subprocess.run(
-                [str(root / "bin" / "mundsen"), "version"],
+                [str(root / "bin" / "mundsen-agent"), "version"],
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 text=True,
@@ -209,7 +209,7 @@ class TestInstaller(unittest.TestCase):
 
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("Git worktree", result.stderr)
-        self.assertFalse((repo / ".mundsen-root").exists())
+        self.assertFalse((repo / ".mundsen-agent-root").exists())
 
     def test_installer_rejects_unmarked_nonempty_directory(self) -> None:
         repo = Path(__file__).resolve().parents[1]
@@ -244,14 +244,14 @@ class TestInstaller(unittest.TestCase):
             self.assertNotEqual(result.returncode, 0)
             self.assertIn("must be empty", result.stderr)
             self.assertEqual(original.read_text(encoding="utf-8"), "keep\n")
-            self.assertFalse((root / ".mundsen-root").exists())
+            self.assertFalse((root / ".mundsen-agent-root").exists())
 
     def test_installer_rejects_forged_root_marker(self) -> None:
         repo = Path(__file__).resolve().parents[1]
         with tempfile.TemporaryDirectory() as temp:
-            root = Path(temp) / "Mundsen"
+            root = Path(temp) / "Mundsen Agent"
             root.mkdir()
-            (root / ".mundsen-root").write_text(
+            (root / ".mundsen-agent-root").write_text(
                 "not-mundsen\n",
                 encoding="utf-8",
             )
@@ -292,7 +292,7 @@ class TestInstaller(unittest.TestCase):
             "providers/home/.claude/.credentials.json",
             "providers/codex/auth.json",
             "current",
-            "releases/0.3.0/src/mundsen/app.py",
+            "releases/0.3.0/src/mundsen_agent/app.py",
         ):
             result = subprocess.run(
                 ["git", "check-ignore", "--no-index", relative],
@@ -308,10 +308,10 @@ class TestInstaller(unittest.TestCase):
     def test_installer_rejects_unsafe_current_path(self) -> None:
         repo = Path(__file__).resolve().parents[1]
         with tempfile.TemporaryDirectory() as temp:
-            root = Path(temp) / "Mundsen"
+            root = Path(temp) / "Mundsen Agent"
             root.mkdir()
-            (root / ".mundsen-root").write_text(
-                "mundsen-runtime-root\n", encoding="utf-8"
+            (root / ".mundsen-agent-root").write_text(
+                "mundsen-agent-runtime-root\n", encoding="utf-8"
             )
             (root / "current").mkdir()
             environment = dict(os.environ)
@@ -347,7 +347,7 @@ class TestInstaller(unittest.TestCase):
         repo = Path(__file__).resolve().parents[1]
         with tempfile.TemporaryDirectory() as temp:
             work = Path(temp)
-            root = work / "Mundsen"
+            root = work / "Mundsen Agent"
             fake_bin = work / "fake-bin"
             fake_bin.mkdir()
             live_claude = fake_bin / "claude"

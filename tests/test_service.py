@@ -5,8 +5,8 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from mundsen.paths import MundsenPaths
-from mundsen.service import (
+from mundsen_agent.paths import MundsenAgentPaths
+from mundsen_agent.service import (
     ServiceManager,
     render_launch_agent,
     render_systemd_service,
@@ -39,10 +39,10 @@ class TestServiceManagement(unittest.TestCase):
         self.tempdir = tempfile.TemporaryDirectory()
         self.addCleanup(self.tempdir.cleanup)
         root = Path(self.tempdir.name)
-        self.paths = MundsenPaths.from_root(root / "Mundsen with spaces")
+        self.paths = MundsenAgentPaths.from_root(root / "Mundsen Agent with spaces")
         self.paths.bin_dir.mkdir(parents=True)
         self.paths.instance_dir.mkdir(parents=True)
-        (self.paths.bin_dir / "mundsen").write_text("", encoding="utf-8")
+        (self.paths.bin_dir / "mundsen-agent").write_text("", encoding="utf-8")
         self.user_home = root / "user"
         self.runner = FakeServiceRunner()
 
@@ -59,17 +59,17 @@ class TestServiceManagement(unittest.TestCase):
         self.assertTrue(status.installed)
         self.assertTrue(status.active)
         payload = render_launch_agent(self.paths)
-        self.assertIn(b"Mundsen with spaces", payload)
+        self.assertIn(b"Mundsen Agent with spaces", payload)
         manager.uninstall_registration()
         self.assertFalse(manager.registration_file.exists())
 
     def test_systemd_unit_quotes_spaces_and_percent_characters(self) -> None:
-        paths = MundsenPaths.from_root(
-            Path(self.tempdir.name) / "Mundsen 100% local"
+        paths = MundsenAgentPaths.from_root(
+            Path(self.tempdir.name) / "Mundsen Agent 100% local"
         )
         unit = render_systemd_service(paths)
 
-        self.assertIn("Mundsen 100%% local", unit)
+        self.assertIn("Mundsen Agent 100%% local", unit)
         self.assertIn("Restart=on-failure", unit)
 
         manager = ServiceManager(

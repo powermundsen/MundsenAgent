@@ -8,20 +8,20 @@ import unittest
 import zipfile
 from pathlib import Path
 
-from mundsen.audit import AuditLogger
-from mundsen.diagnostics import (
+from mundsen_agent.audit import AuditLogger
+from mundsen_agent.diagnostics import (
     DiagnosticsError,
     create_support_bundle,
     read_audit_events,
 )
-from mundsen.paths import MundsenPaths
+from mundsen_agent.paths import MundsenAgentPaths
 
 
 class TestDiagnostics(unittest.TestCase):
     def setUp(self) -> None:
         self.tempdir = tempfile.TemporaryDirectory()
         self.addCleanup(self.tempdir.cleanup)
-        self.paths = MundsenPaths.from_root(Path(self.tempdir.name) / "Mundsen")
+        self.paths = MundsenAgentPaths.from_root(Path(self.tempdir.name) / "Mundsen Agent")
 
     def test_log_reader_filters_safe_metadata(self) -> None:
         logger = AuditLogger(self.paths.audit_log_file)

@@ -1,4 +1,4 @@
-# Bidrag til Mundsen
+# Bidrag til Mundsen Agent
 
 Alle bidrag må bevare skillet mellom plattformkode, personlig instans og
 runtime.

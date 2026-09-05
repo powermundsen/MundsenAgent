@@ -8,7 +8,7 @@ from pathlib import Path
 
 def _load_scanner():
     path = Path(__file__).resolve().parents[1] / "installer" / "privacy-scan.py"
-    spec = importlib.util.spec_from_file_location("mundsen_privacy_scan", path)
+    spec = importlib.util.spec_from_file_location("mundsen_agent_privacy_scan", path)
     if spec is None or spec.loader is None:
         raise RuntimeError("privacy scanner could not be loaded")
     module = importlib.util.module_from_spec(spec)

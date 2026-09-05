@@ -7,17 +7,17 @@ from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import call, patch
 
-from mundsen import cli
-from mundsen.paths import MundsenPaths
-from mundsen.release import ReleaseError
+from mundsen_agent import cli
+from mundsen_agent.paths import MundsenAgentPaths
+from mundsen_agent.release import ReleaseError
 
 
 class TestReleaseCommands(unittest.TestCase):
     def setUp(self) -> None:
         self.tempdir = tempfile.TemporaryDirectory()
         self.addCleanup(self.tempdir.cleanup)
-        self.paths = MundsenPaths.from_root(
-            Path(self.tempdir.name) / "Mundsen"
+        self.paths = MundsenAgentPaths.from_root(
+            Path(self.tempdir.name) / "Mundsen Agent"
         )
         self.manifest = SimpleNamespace(
             version="0.3.0",
@@ -26,13 +26,13 @@ class TestReleaseCommands(unittest.TestCase):
             migrations=(),
         )
 
-    @patch("mundsen.cli.create_upgrade_backup")
-    @patch("mundsen.cli.protected_snapshot", side_effect=[{"a": "1"}, {"a": "1"}])
-    @patch("mundsen.cli.install_release", return_value="0.3.0")
-    @patch("mundsen.cli._require_healthy")
-    @patch("mundsen.cli._service_is_installed", return_value=False)
-    @patch("mundsen.cli.active_version", return_value="0.2.0")
-    @patch("mundsen.cli.load_manifest")
+    @patch("mundsen_agent.cli.create_upgrade_backup")
+    @patch("mundsen_agent.cli.protected_snapshot", side_effect=[{"a": "1"}, {"a": "1"}])
+    @patch("mundsen_agent.cli.install_release", return_value="0.3.0")
+    @patch("mundsen_agent.cli._require_healthy")
+    @patch("mundsen_agent.cli._service_is_installed", return_value=False)
+    @patch("mundsen_agent.cli.active_version", return_value="0.2.0")
+    @patch("mundsen_agent.cli.load_manifest")
     def test_upgrade_checks_health_before_and_after_activation(
         self,
         load_manifest,
@@ -62,17 +62,17 @@ class TestReleaseCommands(unittest.TestCase):
         )
         create_upgrade_backup.assert_called_once()
 
-    @patch("mundsen.cli.create_upgrade_backup")
-    @patch("mundsen.cli.protected_snapshot", return_value={"a": "1"})
-    @patch("mundsen.cli.install_release", return_value="0.3.0")
-    @patch("mundsen.cli.activate_release")
+    @patch("mundsen_agent.cli.create_upgrade_backup")
+    @patch("mundsen_agent.cli.protected_snapshot", return_value={"a": "1"})
+    @patch("mundsen_agent.cli.install_release", return_value="0.3.0")
+    @patch("mundsen_agent.cli.activate_release")
     @patch(
-        "mundsen.cli._require_healthy",
+        "mundsen_agent.cli._require_healthy",
         side_effect=[None, ReleaseError("unhealthy"), None],
     )
-    @patch("mundsen.cli._service_is_installed", return_value=False)
-    @patch("mundsen.cli.active_version", return_value="0.2.0")
-    @patch("mundsen.cli.load_manifest")
+    @patch("mundsen_agent.cli._service_is_installed", return_value=False)
+    @patch("mundsen_agent.cli.active_version", return_value="0.2.0")
+    @patch("mundsen_agent.cli.load_manifest")
     def test_failed_upgrade_restores_verified_previous_release(
         self,
         load_manifest,
@@ -102,12 +102,12 @@ class TestReleaseCommands(unittest.TestCase):
         activate_release.assert_called_once_with(self.paths, "0.2.0")
         self.assertEqual(require_healthy.call_count, 3)
 
-    @patch("mundsen.cli.create_upgrade_backup")
-    @patch("mundsen.cli.protected_snapshot", side_effect=[{"a": "1"}, {"a": "1"}])
-    @patch("mundsen.cli.rollback_release", return_value="0.1.0")
-    @patch("mundsen.cli._require_healthy")
-    @patch("mundsen.cli._service_is_installed", return_value=False)
-    @patch("mundsen.cli.active_version", return_value="0.2.0")
+    @patch("mundsen_agent.cli.create_upgrade_backup")
+    @patch("mundsen_agent.cli.protected_snapshot", side_effect=[{"a": "1"}, {"a": "1"}])
+    @patch("mundsen_agent.cli.rollback_release", return_value="0.1.0")
+    @patch("mundsen_agent.cli._require_healthy")
+    @patch("mundsen_agent.cli._service_is_installed", return_value=False)
+    @patch("mundsen_agent.cli.active_version", return_value="0.2.0")
     def test_rollback_checks_health_before_and_after_activation(
         self,
         active_version,

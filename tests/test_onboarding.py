@@ -7,8 +7,8 @@ import unittest
 from pathlib import Path
 from threading import Event
 
-from mundsen.instance import InstanceSettings
-from mundsen.onboarding import (
+from mundsen_agent.instance import InstanceSettings
+from mundsen_agent.onboarding import (
     COMPLETION_MARKER,
     OnboardingRouter,
     OnboardingState,
@@ -19,7 +19,7 @@ from mundsen.onboarding import (
     opening_prompt,
     strip_completion_marker,
 )
-from mundsen.router.models import AgentResponse
+from mundsen_agent.router.models import AgentResponse
 
 
 def _settings() -> InstanceSettings:

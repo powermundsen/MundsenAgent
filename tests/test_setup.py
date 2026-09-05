@@ -6,9 +6,9 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from mundsen.instance import InstanceSettings, load_instance
-from mundsen.paths import MundsenPaths
-from mundsen.setup import (
+from mundsen_agent.instance import InstanceSettings, load_instance
+from mundsen_agent.paths import MundsenAgentPaths
+from mundsen_agent.setup import (
     configure_telegram,
     create_instance,
     detect_private_chat_id,
@@ -32,7 +32,7 @@ class TestSetup(unittest.TestCase):
     def setUp(self) -> None:
         self.tempdir = tempfile.TemporaryDirectory()
         self.addCleanup(self.tempdir.cleanup)
-        self.paths = MundsenPaths.from_root(Path(self.tempdir.name) / "Mundsen")
+        self.paths = MundsenAgentPaths.from_root(Path(self.tempdir.name) / "Mundsen Agent")
         self.settings = InstanceSettings(
             schema_version=1,
             assistant_name="Fjord",

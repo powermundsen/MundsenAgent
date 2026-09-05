@@ -5,16 +5,16 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from mundsen.config import ConfigurationError, RuntimeSettings
-from mundsen.features import FeatureSet, parse_model_aliases
-from mundsen.paths import MundsenPaths
+from mundsen_agent.config import ConfigurationError, RuntimeSettings
+from mundsen_agent.features import FeatureSet, parse_model_aliases
+from mundsen_agent.paths import MundsenAgentPaths
 
 
 class TestFeatures(unittest.TestCase):
     def setUp(self) -> None:
         self.tempdir = tempfile.TemporaryDirectory()
         self.addCleanup(self.tempdir.cleanup)
-        self.paths = MundsenPaths.from_root(Path(self.tempdir.name) / "Mundsen")
+        self.paths = MundsenAgentPaths.from_root(Path(self.tempdir.name) / "Mundsen Agent")
 
     def test_features_are_disabled_by_default(self) -> None:
         features = FeatureSet(self.paths, RuntimeSettings({}))

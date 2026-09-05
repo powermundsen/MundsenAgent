@@ -4,7 +4,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from mundsen.instance import (
+from mundsen_agent.instance import (
     InstanceConfigurationError,
     InstanceSettings,
     load_instance,

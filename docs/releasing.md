@@ -1,12 +1,12 @@
 # Releaseprosess
 
-Mundsen installeres i produksjon bare fra en versjonert, immutable GitHub
+Mundsen Agent installeres i produksjon bare fra en versjonert, immutable GitHub
 Release. `main` og løse Actions-artifacts er aldri produksjonskilder.
 
 ## Engangsoppsett på GitHub
 
 1. Aktiver **Settings → Releases → Enable release immutability**.
-2. Publiser bare den rene, skannede Mundsen-historikken. Personlig
+2. Publiser bare den rene, skannede Mundsen Agent-historikken. Personlig
    kildehistorikk skal forbli i et separat privat arkiv.
 
 Releaseworkflowen spør GitHubs repository-endepunkt direkte og feiler lukket
@@ -48,10 +48,10 @@ historikkskannen eller immutable-release-kontrollen mangler.
 
 Hver release inneholder:
 
-- `mundsen-<versjon>.tar.gz`
+- `mundsen-agent-<versjon>.tar.gz`
 - `release-manifest.json`
-- `Mundsen-<versjon>-installer.sh`
-- `Mundsen-<versjon>-installer.sh.sha256`
+- `MundsenAgent-<versjon>-installer.sh`
+- `MundsenAgent-<versjon>-installer.sh.sha256`
 - `SHA256SUMS`
 
 Releasemanifestet er maskinkontrakten for updateren. `SHA256SUMS` er den

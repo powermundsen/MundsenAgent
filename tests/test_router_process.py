@@ -7,7 +7,7 @@ import threading
 import time
 import unittest
 
-from mundsen.router.process import run_command
+from mundsen_agent.router.process import run_command
 
 
 class TestControlledProcess(unittest.TestCase):

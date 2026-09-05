@@ -2,7 +2,7 @@
 
 ## Status og rapportering
 
-Mundsen har ingen støttet release ennå. Ikke bruk `main` som produksjonsruntime.
+Mundsen Agent har ingen støttet release ennå. Ikke bruk `main` som produksjonsruntime.
 Releaseworkflowen publiserer først som draft, laster opp alle filer og gjør
 deretter releasen synlig. Workflowen kontrollerer GitHubs immutable-status
 direkte før bygging. Tagg, assets og attestasjon låses dermed ved publisering.
@@ -18,12 +18,12 @@ En installasjon har fire hovedgrenser:
 
 1. **GitHub-release:** read-only kilde til versjonert plattformkode.
 2. **Lokal runtime:** kjører bridge og agent-CLI-er som den lokale,
-   upriviligerte brukeren som installerte Mundsen.
+   upriviligerte brukeren som installerte Mundsen Agent.
 3. **Personlig instans:** leses av agentene, men eies ikke av updateren.
 4. **Eksterne tjenester:** Telegram, Claude og OpenAI, pluss eksplisitt
    aktiverte moduler.
 
-Mundsen beskytter ikke mot en angriper som allerede kontrollerer runtimebrukeren
+Mundsen Agent beskytter ikke mot en angriper som allerede kontrollerer runtimebrukeren
 eller operativsystemet. En egen lokal bruker begrenser hvilke personlige filer
 den native macOS-runtimen kan lese. En valgfri isolert VM gir en sterkere
 grense, men ingen av delene erstatter oppdatert OS, diskbeskyttelse og sikker
@@ -52,7 +52,7 @@ hemmelighetsfelter før output.
 - Bot-token skal ikke brukes i URL-er som logges.
 - Vedlegg lagres privat og får en dokumentert retention-policy.
 - Vedleggsnavn genereres lokalt, størrelse begrenses før lagring, og lokale
-  hjelpeprogrammer startes uten shell og uten Mundsen-secrets i prosessmiljøet.
+  hjelpeprogrammer startes uten shell og uten Mundsen Agent-secrets i prosessmiljøet.
 - SVG sendes bare som dokument etter konservativ XML-kontroll som avviser
   script, event handlers, aktive referanser og eksterne ressurser.
 - Brukerrettede feil skal sanitiseres. Rå traceback og prosessoutput hører bare
@@ -68,7 +68,7 @@ kontrollhandlinger.
 Agentenes tekst er ubetrodd input til handlingslaget. Instruksjoner som kommer
 fra meldinger, dokumenter eller nettsider kan være prompt injection.
 
-Mundsen skal kreve eksplisitt godkjenning før:
+Mundsen Agent skal kreve eksplisitt godkjenning før:
 
 - meldinger eller endringer sendes til eksterne mottakere
 - betaling, kjøp eller andre kostbare handlinger
@@ -108,15 +108,15 @@ gjør en slik handling mulig må håndheve samme totrinnsgrense i handlingslaget
 
 Første release skal foretrekke Python-standardbiblioteket og lokale
 systemverktøy. Nye pakker krever begrunnelse, låst versjon, lisensvurdering og
-sikkerhetsgjennomgang. Mundsen skal ikke kreve pay-as-you-go-API-er.
+sikkerhetsgjennomgang. Mundsen Agent skal ikke kreve pay-as-you-go-API-er.
 
 ## Installatørisolasjon
 
-Offisielle installasjonsprogrammer for agent-CLI-er er kode utenfor Mundsens
+Offisielle installasjonsprogrammer for agent-CLI-er er kode utenfor Mundsen Agents
 kontroll. De skal aldri testes i samme OS-bruker som en eksisterende
 assistent-runtime.
 
-Mundsen starter Claude- og Codex-installasjonene med `env -i`, separat `HOME`,
+Mundsen Agent starter Claude- og Codex-installasjonene med `env -i`, separat `HOME`,
 separate XDG- og credentialkataloger og en fast system-`PATH`. Arvede
 API-nøkler, NVM-stier og andre globale agentmiljøer skal ikke være synlige.
 Dette testes med simulerte leverandørinstallere. En ekte releaseinstallasjon må

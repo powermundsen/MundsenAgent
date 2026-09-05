@@ -3,7 +3,7 @@ from __future__ import annotations
 import random
 import unittest
 
-from mundsen.bridge.telegram_format import (
+from mundsen_agent.bridge.telegram_format import (
     chunk_markdown,
     markdown_to_telegram_html,
     render_table_block,

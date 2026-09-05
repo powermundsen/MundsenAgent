@@ -3,14 +3,14 @@ from __future__ import annotations
 import unittest
 from pathlib import Path
 
-from mundsen.paths import MundsenPaths
-from mundsen.router.agents import ClaudeAdapter, CodexAdapter
-from mundsen.router.capabilities import (
+from mundsen_agent.paths import MundsenAgentPaths
+from mundsen_agent.router.agents import ClaudeAdapter, CodexAdapter
+from mundsen_agent.router.capabilities import (
     CapabilityError,
     claude_allowed_tools,
     codex_sandbox,
 )
-from mundsen.router.process import CommandResult
+from mundsen_agent.router.process import CommandResult
 
 
 def _recording_runner(recorded: list[list[str]]) -> object:
@@ -29,7 +29,7 @@ def _recording_runner(recorded: list[list[str]]) -> object:
 
 class TestCapabilityBoundary(unittest.TestCase):
     def setUp(self) -> None:
-        self.paths = MundsenPaths.from_root(Path("/tmp/mundsen-capability-test"))
+        self.paths = MundsenAgentPaths.from_root(Path("/tmp/mundsen-agent-capability-test"))
 
     def test_claude_command_grants_exactly_the_local_only_tools(self) -> None:
         recorded: list[list[str]] = []

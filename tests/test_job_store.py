@@ -5,12 +5,12 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from mundsen.bridge.job_store import (
+from mundsen_agent.bridge.job_store import (
     JobStoreError,
     MessageJob,
     PersistentJobStore,
 )
-from mundsen.router.models import AgentResponse
+from mundsen_agent.router.models import AgentResponse
 
 
 class TestPersistentJobStore(unittest.TestCase):

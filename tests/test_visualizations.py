@@ -4,15 +4,15 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from mundsen.bridge.visualizations import VisualizationRenderer
-from mundsen.paths import MundsenPaths
+from mundsen_agent.bridge.visualizations import VisualizationRenderer
+from mundsen_agent.paths import MundsenAgentPaths
 
 
 class TestVisualizationRenderer(unittest.TestCase):
     def setUp(self) -> None:
         self.tempdir = tempfile.TemporaryDirectory()
         self.addCleanup(self.tempdir.cleanup)
-        self.paths = MundsenPaths.from_root(Path(self.tempdir.name) / "Mundsen")
+        self.paths = MundsenAgentPaths.from_root(Path(self.tempdir.name) / "Mundsen Agent")
         self.renderer = VisualizationRenderer(self.paths, language="nb")
 
     def test_svg_and_mermaid_are_private_artifacts(self) -> None:

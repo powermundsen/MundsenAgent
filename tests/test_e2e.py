@@ -33,7 +33,7 @@ class TestFreshInstallation(unittest.TestCase):
                 check=False,
             )
             self.assertEqual(build.returncode, 0, build.stderr)
-            archive = dist / "mundsen-0.3.0.tar.gz"
+            archive = dist / "mundsen-agent-0.3.0.tar.gz"
             manifest = json.loads(
                 (dist / "release-manifest.json").read_text(encoding="utf-8")
             )
@@ -42,9 +42,9 @@ class TestFreshInstallation(unittest.TestCase):
                 manifest["files"][0]["sha256"],
                 hashlib.sha256(archive.read_bytes()).hexdigest(),
             )
-            installer = dist / "Mundsen-0.3.0-installer.sh"
+            installer = dist / "MundsenAgent-0.3.0-installer.sh"
             expected_installer_hash = (
-                (dist / "Mundsen-0.3.0-installer.sh.sha256")
+                (dist / "MundsenAgent-0.3.0-installer.sh.sha256")
                 .read_text(encoding="utf-8")
                 .split()[0]
             )
@@ -65,7 +65,7 @@ class TestFreshInstallation(unittest.TestCase):
             self.assertEqual(checksums[installer.name], hashlib.sha256(installer.read_bytes()).hexdigest())
             with tarfile.open(archive, "r:gz") as bundle:
                 names = bundle.getnames()
-                self.assertIn("mundsen-0.3.0/LICENSE", names)
+                self.assertIn("mundsen-agent-0.3.0/LICENSE", names)
             self.assertFalse(
                 any(
                     "__pycache__" in name
@@ -88,7 +88,7 @@ class TestFreshInstallation(unittest.TestCase):
             install = subprocess.run(
                 [
                     "bash",
-                    str(dist / "Mundsen-0.3.0-installer.sh"),
+                    str(dist / "MundsenAgent-0.3.0-installer.sh"),
                     str(root),
                     "--no-setup",
                 ],
@@ -104,10 +104,10 @@ class TestFreshInstallation(unittest.TestCase):
             self._write_fake_providers(root)
             installed_python = textwrap.dedent(
                 """
-                from mundsen.app import build_bridge
-                from mundsen.instance import InstanceSettings
-                from mundsen.paths import MundsenPaths
-                from mundsen.setup import configure_telegram, create_instance
+                from mundsen_agent.app import build_bridge
+                from mundsen_agent.instance import InstanceSettings
+                from mundsen_agent.paths import MundsenAgentPaths
+                from mundsen_agent.setup import configure_telegram, create_instance
 
                 class LocalTelegram:
                     def __init__(self):
@@ -120,7 +120,7 @@ class TestFreshInstallation(unittest.TestCase):
                         self.messages.append((chat_id, html_text))
                         return len(self.messages)
 
-                paths = MundsenPaths.from_root(__import__("os").environ["MUNDSEN_HOME"])
+                paths = MundsenAgentPaths.from_root(__import__("os").environ["MUNDSEN_HOME"])
                 create_instance(
                     paths,
                     InstanceSettings(
@@ -170,7 +170,7 @@ class TestFreshInstallation(unittest.TestCase):
             self.assertIn("<b>E2E OK</b>", routed.stdout)
 
             health = subprocess.run(
-                [str(root / "bin" / "mundsen"), "health", "--no-service"],
+                [str(root / "bin" / "mundsen-agent"), "health", "--no-service"],
                 env=run_environment,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
